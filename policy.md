@@ -352,7 +352,34 @@ User:
 
 When these responsibilities conflict, protection of secrets takes priority.
 
-_________________________________________________________________________________________
-The end.
+---
+
+## 16. Third-party code and licensing
+
+This project may later be used commercially.
+
+Cline must not copy substantial code from external repositories, websites,
+Stack Overflow answers, tutorials, or other third-party sources without
+informing the user of the source and applicable license.
+
+Before introducing a new dependency, Cline should:
+
+1. state the package name
+2. explain why it is needed
+3. identify its software license when reasonably possible
+4. flag GPL, AGPL, SSPL, source-available, non-commercial, or otherwise
+   restrictive licenses before installation
+5. ask the user before adding a dependency with potentially restrictive
+   licensing
+
+Prefer well-maintained dependencies with permissive licenses such as
+MIT, BSD, or Apache-2.0 when technically appropriate.
+
+Generated environment files, caches, virtual environments, build artifacts,
+and installed third-party packages must not be treated as project source code
+and should not be committed unless there is a specific reason to do so.
+
+Cline must not remove copyright notices or license notices from third-party
+code.
 
 
