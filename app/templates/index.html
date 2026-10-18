@@ -18,7 +18,9 @@
                     <div class="entry-card-category">
                         {{ entry['category'] }}{% if entry['subcategory'] %} / {{ entry['subcategory'] }}{% endif %}
                     </div>
-                    <div class="entry-card-description">{{ entry['description'] }}</div>
+                    {% if entry['description'] %}
+                        <div class="entry-card-description">{{ entry['description'] }}</div>
+                    {% endif %}
                     <div class="entry-card-actions">
                         <a href="{{ url_for('edit_entry', entry_id=entry['id']) }}">Edit</a>
                     </div>

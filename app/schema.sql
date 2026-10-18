@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS time_entries (
     duration_minutes INTEGER NOT NULL CHECK (duration_minutes > 0),
     category TEXT NOT NULL,
     subcategory TEXT,                    -- optional (not every category needs one)
-    description TEXT NOT NULL,           -- required, validated by the Phase 1 form
+    description TEXT,                    -- optional free text; an entry does not require a description
     start_time TEXT,                     -- optional, secondary to duration_minutes
     end_time TEXT,                       -- optional, secondary to duration_minutes
     original_text TEXT,                  -- raw free text, if any (Phase 2+)

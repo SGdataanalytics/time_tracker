@@ -75,16 +75,14 @@ def validate_entry_form(form):
         if subcategory not in categories.get_subcategories(category):
             errors.append("Unknown subcategory selected for this category.")
 
-    # description: required, non-empty.
-    if not description:
-        errors.append("Description is required.")
+    # description: optional free text; an entry does not require one.
 
     data = {
         "entry_date": entry_date,
         "duration_minutes": duration_minutes,
         "category": category,
         "subcategory": subcategory or None,
-        "description": description,
+        "description": description or None,
         "start_time": start_time or None,
         "end_time": end_time or None,
     }

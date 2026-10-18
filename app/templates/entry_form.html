@@ -46,13 +46,12 @@
             <option value="">-- None --</option>
         </select>
 
-        <label for="description">Description</label>
+        <label for="description">Description (optional)</label>
         <textarea
             id="description"
             name="description"
             rows="3"
-            required
-        >{{ entry['description'] if entry else '' }}</textarea>
+        >{{ entry['description'] if entry and entry['description'] else '' }}</textarea>
 
         <label for="start_time">Start time (optional)</label>
         <input

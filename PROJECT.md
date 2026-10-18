@@ -579,7 +579,7 @@ The following decisions are fixed for Phase 1 unless explicitly changed:
 - `created_at` is set once, automatically, at insert time (database default) and is never modified afterwards.
 - `updated_at` is `NULL` until an entry is actually edited, and is then set explicitly in the Python `UPDATE` query (in `update_entry()`), not via a database trigger.
 - `input_source` is constrained to `text` or `voice`.
-- `description` is required (`NOT NULL`) and validated by the Phase 1 form; `subcategory`, `start_time`, and `end_time` remain nullable.
+- `description` is optional (nullable); an entry does not require free text. `subcategory`, `start_time`, and `end_time` also remain nullable.
 - The current `app/categories.py` is the single source of truth for categories and subcategories.
 - Do not create root-level `templates/`, `static/`, or `data/` folders.
 - Local runtime data belongs under `instance/` and must not be committed.

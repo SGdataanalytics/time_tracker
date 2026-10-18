@@ -50,6 +50,15 @@ def get_db():
         g.db.row_factory = sqlite3.Row
         # Enforce foreign key constraints (not used yet, but safe default).
         g.db.execute("PRAGMA foreign_keys = ON")
+        # Make sure the schema exists on *this* connection before it is
+        # used. `sqlite3.connect()` silently creates an empty file if the
+        # configured DATABASE path does not exist (it never raises), so a
+        # db file that is deleted or replaced while the server is running
+        # would otherwise leave every later query failing with
+        # "no such table: time_entries" until the process is restarted.
+        # _ensure_schema() uses CREATE TABLE IF NOT EXISTS, so calling it
+        # here on every new connection is cheap and never destroys data.
+        _ensure_schema(g.db)
 
     return g.db
 
@@ -62,19 +71,29 @@ def close_db(e=None):
         db.close()
 
 
-def init_db():
-    """Create the database schema from schema.sql, if it does not exist yet.
+def _ensure_schema(db):
+    """Run schema.sql against the given connection.
 
-    schema.sql uses `CREATE TABLE IF NOT EXISTS`, so calling this again
-    (e.g. on every app startup) is safe and never deletes existing user
-    data. A separate, deliberate action would be required to reset data,
-    and no such action is provided in Phase 1.
+    schema.sql uses `CREATE TABLE IF NOT EXISTS`, so running this against
+    an already-initialized database is safe and never deletes existing
+    user data. A separate, deliberate action would be required to reset
+    data, and no such action is provided in Phase 1.
     """
-    db = get_db()
-
     schema_path = Path(__file__).parent / "schema.sql"
     with open(schema_path, "r") as f:
         db.executescript(f.read())
+
+
+def init_db():
+    """Create the database schema from schema.sql, if it does not exist yet.
+
+    Kept as a public function for the `flask init-db` CLI command below.
+    `get_db()` already calls `_ensure_schema()` the first time it opens a
+    connection, so simply obtaining the connection here is enough; normal
+    app startup/requests no longer depend on this function having been
+    called first.
+    """
+    get_db()
 
 
 @click.command("init-db")
