@@ -1,0 +1,124 @@
+/* Minimal, mobile-first styling for time_tracker (Phase 1).
+   Kept deliberately simple: no CSS framework, just enough to make the
+   app comfortable to use from a phone screen. */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0 1rem 2rem;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #1a1a1a;
+    background-color: #fafafa;
+}
+
+.site-header h1 {
+    font-size: 1.4rem;
+    margin: 1rem 0;
+}
+
+.site-header a {
+    color: inherit;
+    text-decoration: none;
+}
+
+main {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.flash-messages {
+    list-style: none;
+    padding: 0.75rem 1rem;
+    margin: 0 0 1rem;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 6px;
+    color: #664d03;
+}
+
+.flash-messages li + li {
+    margin-top: 0.25rem;
+}
+
+.button {
+    display: inline-block;
+    padding: 0.6rem 1rem;
+    background-color: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.button-secondary {
+    background-color: #6b7280;
+    margin-left: 0.5rem;
+}
+
+.entry-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.entry-card {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.entry-card-main {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.entry-card-category {
+    color: #4b5563;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+.entry-card-description {
+    margin-top: 0.4rem;
+}
+
+.entry-card-actions {
+    margin-top: 0.5rem;
+}
+
+.entry-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.entry-form label {
+    margin-top: 0.9rem;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+
+.entry-form input,
+.entry-form select,
+.entry-form textarea {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.entry-form .button {
+    margin-top: 1.25rem;
+    width: fit-content;
+}
+

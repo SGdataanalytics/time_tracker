@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Time entries - time_tracker{% endblock %}
+
+{% block content %}
+    <p>
+        <a class="button" href="{{ url_for('new_entry') }}">+ Add time entry</a>
+    </p>
+
+    {% if entries %}
+        <ul class="entry-list">
+            {% for entry in entries %}
+                <li class="entry-card">
+                    <div class="entry-card-main">
+                        <span class="entry-date">{{ entry['entry_date'] }}</span>
+                        <span class="entry-duration">{{ entry['duration_minutes'] }} min</span>
+                    </div>
+                    <div class="entry-card-category">
+                        {{ entry['category'] }}{% if entry['subcategory'] %} / {{ entry['subcategory'] }}{% endif %}
+                    </div>
+                    <div class="entry-card-description">{{ entry['description'] }}</div>
+                    <div class="entry-card-actions">
+                        <a href="{{ url_for('edit_entry', entry_id=entry['id']) }}">Edit</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No time entries yet. Add your first one above.</p>
+    {% endif %}
+{% endblock %}
+

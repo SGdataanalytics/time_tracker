@@ -18,6 +18,7 @@
 - [Learning requirement](#learning-requirement)
 - [Cline permissions philosophy](#cline-permissions-philosophy)
 - [Current status](#current-status)
+- [Phase 1 architecture decisions](#phase-1-architecture-decisions)
 - [Open design decisions](#open-design-decisions)
 
 ---
@@ -256,7 +257,7 @@ This keeps statistics simple and consistent, since every entry has a comparable 
 
 The initial storage solution should be deliberately simple.
 
-Do not introduce a complex database system prematurely. The specific storage/database technology has **not** been chosen yet — this is an open design decision to be discussed before implementation (see [Open design decisions](#open-design-decisions)).
+**Decided for Phase 1**: time entries are stored in SQLite, accessed via Python's built-in `sqlite3` module directly (no ORM). This avoids introducing a complex database system prematurely while still supporting the aggregate queries needed later for statistics (see [Phase 1 architecture decisions](#phase-1-architecture-decisions)).
 
 The storage design should, however, make it possible to expand the application later without having to redesign everything.
 
@@ -538,7 +539,7 @@ For significant file changes, network/security changes, or architectural decisio
 
 ## Current status
 
-The project is at the very beginning.
+Phase 1 implementation is underway, following the fixed decisions in [Phase 1 architecture decisions](#phase-1-architecture-decisions).
 
 Currently:
 
@@ -548,10 +549,41 @@ Currently:
 - VS Code Remote SSH works
 - Cline is installed in the remote workspace
 - Cline is connected to Claude through the Anthropic API
-- application structure has not yet been finalized
-- no significant application implementation has been approved yet
+- the Phase 1 Flask application package (`app/`) has been scaffolded
+- `app/schema.sql` defines the `time_entries` table and has been implemented and validated
+- `app/db.py` (raw `sqlite3` connection handling, `init_db`, and CRUD query helpers) has been implemented and validated
+- `app/__init__.py` implements the `create_app()` application factory, wires up `app/db.py`, and has been validated to correctly create the schema in the `instance/` database
+- `app/categories.py` exists and is the Phase 1 source of truth for categories and subcategories
+- the `instance/` SQLite database has been created locally and is excluded from Git via `.gitignore`
+- `app/routes.py` and the templates/static files under `app/templates/` and `app/static/` are the next implementation step
 
-The next step is to agree on a minimal v0.1 project structure before implementation begins.
+The next step is to implement routes and templates on top of the already-validated data layer.
+
+---
+
+## Phase 1 architecture decisions
+
+The following decisions are fixed for Phase 1 unless explicitly changed:
+
+- Use a Flask application package under `app/`.
+- Use the `create_app()` application factory pattern.
+- Do not use Flask Blueprints in Phase 1.
+- Use raw Python `sqlite3`; do not use an ORM.
+- Use the table name `time_entries`.
+- Use `entry_date` as the date field name.
+- `duration_minutes` is the canonical measure of time spent.
+- `start_time` and `end_time` are optional secondary fields only.
+- Normal database initialization must never delete existing user data.
+- Do not use `DROP TABLE IF EXISTS` in normal initialization.
+- Use `CREATE TABLE IF NOT EXISTS`.
+- `created_at` is set once, automatically, at insert time (database default) and is never modified afterwards.
+- `updated_at` is `NULL` until an entry is actually edited, and is then set explicitly in the Python `UPDATE` query (in `update_entry()`), not via a database trigger.
+- `input_source` is constrained to `text` or `voice`.
+- `description` is required (`NOT NULL`) and validated by the Phase 1 form; `subcategory`, `start_time`, and `end_time` remain nullable.
+- The current `app/categories.py` is the single source of truth for categories and subcategories.
+- Do not create root-level `templates/`, `static/`, or `data/` folders.
+- Local runtime data belongs under `instance/` and must not be committed.
+- Keep dependencies minimal. For Phase 1, Flask is the only direct dependency.
 
 ---
 
@@ -559,8 +591,8 @@ The next step is to agree on a minimal v0.1 project structure before implementat
 
 The following decisions are intentionally left open and should be discussed before or during implementation:
 
-- **Storage technology**: which simple storage mechanism to use for time entries in v0.1 (e.g. flat file, SQLite, or similar) has not been chosen yet.
-- **Final category/subcategory list**: the concrete set of categories and subcategories has not been finalized.
-- **v0.1 folder/file structure**: the exact Flask project layout for the first milestone has not been agreed yet.
+- **Final category/subcategory list**: `app/categories.py` provides a working starting set (see [Phase 1 architecture decisions](#phase-1-architecture-decisions)), but the concrete long-term set of categories and subcategories has not been finalized.
 - **Date normalization approach**: whether to use a library or hand-written rules for turning relative date expressions into concrete dates.
 - **Business outcome data model**: the exact shape of outcome records (fields, granularity) is not yet defined; only the principle that it is a separate dataset has been agreed.
+
+Resolved for Phase 1 (see [Phase 1 architecture decisions](#phase-1-architecture-decisions) for details): storage technology (SQLite via raw `sqlite3`) and the v0.1 folder/file structure (the `app/` package layout already implemented).
