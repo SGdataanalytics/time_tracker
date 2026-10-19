@@ -18,6 +18,15 @@
                     <div class="entry-card-category">
                         {{ entry['category'] }}{% if entry['subcategory'] %} / {{ entry['subcategory'] }}{% endif %}
                     </div>
+                    {% set shown_end_time, end_time_is_derived = display_end_times[entry['id']] %}
+                    {% if entry['start_time'] or shown_end_time %}
+                        <div class="entry-card-times">
+                            {% if entry['start_time'] %}{{ entry['start_time'] }}{% endif %}
+                            {% if shown_end_time %}
+                                &ndash; {{ shown_end_time }}{% if end_time_is_derived %} <span class="entry-time-derived">(derived)</span>{% endif %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
                     {% if entry['description'] %}
                         <div class="entry-card-description">{{ entry['description'] }}</div>
                     {% endif %}

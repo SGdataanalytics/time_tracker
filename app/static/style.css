@@ -92,6 +92,16 @@ main {
     margin-top: 0.4rem;
 }
 
+.entry-card-times {
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.entry-time-derived {
+    font-style: italic;
+}
+
 .entry-card-actions {
     margin-top: 0.5rem;
 }

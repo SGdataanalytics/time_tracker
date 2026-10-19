@@ -21,7 +21,7 @@ from datetime import datetime
 
 from flask import abort, flash, redirect, render_template, request, url_for
 
-from . import categories, db
+from . import categories, db, time_calc
 
 
 def validate_entry_form(form):
@@ -92,7 +92,29 @@ def validate_entry_form(form):
 def index():
     """List all time entries, most recent first."""
     entries = db.get_all_entries()
-    return render_template("index.html", entries=entries)
+    return render_template(
+        "index.html",
+        entries=entries,
+        display_end_times=_display_end_times(entries),
+    )
+
+
+def _display_end_times(entries):
+    """Build {entry_id: (end_time, is_derived)} for a list of entries.
+
+    `duration_minutes` stays the canonical measure of time spent; this is
+    purely a display helper so templates don't need to know how the
+    derivation works. `is_derived` lets the template label a calculated
+    value (e.g. "(derived)") differently from one the user typed in.
+    """
+    result = {}
+    for entry in entries:
+        explicit_end_time = entry["end_time"]
+        shown = time_calc.display_end_time(
+            entry["start_time"], explicit_end_time, entry["duration_minutes"]
+        )
+        result[entry["id"]] = (shown, shown is not None and not explicit_end_time)
+    return result
 
 
 def _categories_map():

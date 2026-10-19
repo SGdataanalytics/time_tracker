@@ -573,6 +573,7 @@ The following decisions are fixed for Phase 1 unless explicitly changed:
 - Use `entry_date` as the date field name.
 - `duration_minutes` is the canonical measure of time spent.
 - `start_time` and `end_time` are optional secondary fields only.
+- If `start_time` is present and `end_time` is blank, an end time is derived from `start_time + duration_minutes` for display purposes only (see `app/time_calc.py`). The derived value is never written to the database; `end_time` in storage remains exactly what the user typed, or `NULL` if left blank. If the user explicitly enters `end_time`, that explicit value is always shown instead of a derived one. Derivation wraps correctly past midnight (e.g. 23:30 + 120 minutes -> 01:30).
 - Normal database initialization must never delete existing user data.
 - Do not use `DROP TABLE IF EXISTS` in normal initialization.
 - Use `CREATE TABLE IF NOT EXISTS`.
